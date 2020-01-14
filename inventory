@@ -1,0 +1,17 @@
+[kubernetes:children]
+k8s_masters
+k8s_nodes
+
+[k8s_masters]
+k8s-master-01 ansible_host=192.168.10.100 ansible_user=vagrant
+
+[k8s_masters:vars]
+kubernetes_role="master"
+kubernetes_apiserver_advertise_address=192.168.10.100
+
+[k8s_nodes]
+k8s-worker-01 ansible_host=192.168.10.200 ansible_user=vagrant
+k8s-worker-02 ansible_host=192.168.10.210 ansible_user=vagrant
+
+[k8s_nodes:vars]
+kubernetes_role="node"

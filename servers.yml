@@ -1,0 +1,19 @@
+---
+- name: k8s-master-01
+  box: ubuntu/bionic64 #centos/7
+  #box: centos/7
+  cpus: 2
+  ram: 2048
+  ip: 192.168.10.100
+- name: k8s-worker-01
+  box: ubuntu/bionic64 #centos/7
+  #box: centos/7
+  cpus: 1
+  ram: 2048
+  ip: 192.168.10.200
+- name: k8s-worker-02
+  box: ubuntu/bionic64 #centos/7
+  #box: centos/7
+  cpus: 1
+  ram: 2048
+  ip: 192.168.10.210

@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  become: true
+  become_user: root
+
+  vars:
+    kubernetes_allow_pods_on_master: true
+    docker_package: docker-ce=5:18.09.9~3-0~ubuntu-bionic
+    kubernetes_kubelet_extra_args: "--cgroup-driver=cgroupfs"
+    docker_install_compose: false
+    kubernetes_enable_web_ui: true
+    kubernetes_web_ui_manifest_file: https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.kubernetes
