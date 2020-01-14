@@ -2,6 +2,9 @@
 k8s_masters
 k8s_nodes
 
+[kubernetes:vars]
+ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
+
 [k8s_masters]
 k8s-master-01 ansible_host=192.168.10.100 ansible_user=vagrant
 

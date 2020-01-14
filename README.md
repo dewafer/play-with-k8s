@@ -22,17 +22,12 @@ Play with k8s clusters
 
 3. Install kubernetes clusters using Ansible playbook.
 ```
-> ansible-playbook -i inventory --ssh-extra-args="-o StrictHostKeyChecking=no" -v playbook.yml
+> ansible-playbook -i inventory playbook.yml
 ```
 
-4. Copy admin.conf out and connect
-```
-> vagrant ssh k8s-master-01
-> sudo cp /etc/kubernetes/admin.conf /vagrant/
-> exit
-```
+4. Connect to k8s cluster using config
 On local machine:
 ```
-> export KUBECONF=admin.conf
+> export KUBECONFIG=kubeconf/k8s-master-01_admin.conf
 > kubectl get nodes
 ```

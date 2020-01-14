@@ -10,8 +10,41 @@
     kubernetes_kubelet_extra_args: "--cgroup-driver=cgroupfs"
     docker_install_compose: false
     kubernetes_enable_web_ui: true
-    kubernetes_web_ui_manifest_file: https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+    kubernetes_web_ui_manifest_file: https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+    kubernetes_pod_network:
+      # Flannel CNI.
+      # cni: 'flannel'
+      #cidr: '10.244.0.0/16'
+      # Calico CNI.
+      cni: 'calico'
+      cidr: '192.168.0.0/16'
 
   roles:
     - geerlingguy.docker
     - geerlingguy.kubernetes
+
+  post_tasks:
+    - name: Fetch admin.conf
+      fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: ./kubeconf/{{ ansible_nodename }}_admin.conf
+        flat: yes
+        fail_on_missing: no
+      when:
+        - kubernetes_role == 'master'
+
+    - name: Check if Kubernetes Dashboard UI service already exists.
+      shell: kubectl get services --namespace kubernetes-dashboard | grep -q kubernetes-dashboard
+      changed_when: false
+      failed_when: false
+      register: kubernetes_dashboard_service
+      when:
+        - kubernetes_role == 'master'
+        - kubernetes_enable_web_ui | bool
+
+    - name: Enable the Kubernetes Web Dashboard UI (if configured).
+      command: "kubectl create -f {{ kubernetes_web_ui_manifest_file }}"
+      when:
+        - kubernetes_role == 'master'
+        - kubernetes_enable_web_ui | bool
+        - kubernetes_dashboard_service.rc != 0
