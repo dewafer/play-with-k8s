@@ -1,0 +1,14 @@
+---
+- name: Get Token for Dashboard
+  shell: "kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') | tee /root/token.tmp"
+  failed_when: false
+  register: dashboard_token
+
+- name: Print the Token
+  debug: var=dashboard_token.stdout_lines
+
+- name: Log token to local
+  fetch:
+    src: '/root/token.tmp'
+    dest: 'dashboard_token.log'
+    flat: yes

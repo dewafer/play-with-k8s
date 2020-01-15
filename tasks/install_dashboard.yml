@@ -1,0 +1,29 @@
+---
+- name: Check if Kubernetes Dashboard UI service already exists.
+  shell: kubectl describe service --namespace kubernetes-dashboard kubernetes-dashboard
+  changed_when: false
+  ignore_errors: true
+  register: kubernetes_dashboard_service
+
+- name: Apply the Kubernetes Web Dashboard UI.
+  command: "kubectl create -f {{ kubernetes_web_ui_manifest_file }}"
+  when: kubernetes_dashboard_service is failed
+
+# create admin user and roles for dashboard
+- name: Copy Dashboard Account Configuration yaml File
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: 'files/dashboard-adminuser.yaml', dest: '/root/dashboard-adminuser.yaml' }
+    - { src: 'files/dashboard-roles.yaml', dest: '/root/dashboard-roles.yaml' }
+
+- name: Create Dashboard admin-user
+  command: "kubectl apply -f /root/dashboard-adminuser.yaml"
+  register: apply_dashboard_adminuser
+  changed_when: apply_dashboard_adminuser.stdout != 'serviceaccount/admin-user unchanged'
+
+- name: Create Dashboard roles
+  command: "kubectl apply -f /root/dashboard-roles.yaml"
+  register: apply_dashboard_roles
+  changed_when: apply_dashboard_roles.stdout != 'clusterrolebinding.rbac.authorization.k8s.io/admin-user unchanged'

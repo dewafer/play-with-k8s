@@ -1,0 +1,43 @@
+---
+
+- hosts: all
+  become: true
+  become_user: root
+
+  vars:
+    kubernetes_allow_pods_on_master: true
+    docker_package: docker-ce=5:18.09.9~3-0~ubuntu-bionic
+    kubernetes_kubelet_extra_args: "--cgroup-driver=cgroupfs --node-ip={{ ansible_host }}"
+    docker_install_compose: false
+    kubernetes_enable_web_ui: false
+    kubernetes_pod_network:
+    # Flannel CNI.
+    #  cni: 'flannel'
+    #  cidr: '172.18.0.0/16'
+    # Calico CNI.
+      cni: 'calico'
+      cidr: '10.244.0.0/16'
+
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.kubernetes
+
+  post_tasks:
+    - name: Fetch admin.conf to local machine
+      fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: ./kubeconf/{{ ansible_nodename }}_admin.conf
+        flat: yes
+        fail_on_missing: no
+      when:
+        - kubernetes_role == 'master'
+
+    # workaround for dashboard
+    - include_tasks: tasks/install_dashboard.yml
+      when:
+        - kubernetes_role == 'master'
+
+    - include_tasks: tasks/grant_dashboard_token.yml
+      when:
+        - kubernetes_role == 'master'
+
