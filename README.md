@@ -3,41 +3,43 @@ Play with k8s clusters
 
 ## Requirements
 
-* kubectl
-* Virtualbox
-* Vagrant
-* Ansible
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* [Virtualbox](https://www.virtualbox.org)
+* [Vagrant](https://www.vagrantup.com)
+* [Ansible](https://www.ansible.com)
+
+**Please note that current version of Vagrant (2.2.6) only supports Virtualbox version up to 6.0.x, please do not install Virtualbox 6.1.**
 
 ## Usage
 
 1. Install requirements from Ansible Galaxy.
-```
+```bash
 > ansible-galaxy install -r requirements.yml
 ```
 
 2. Start Vms using Vagrant
-```
+```bash
 > vagrant up
 ```
 
 3. Install kubernetes clusters using Ansible playbook.
-```
+```bash
 > ansible-playbook -i inventory kubernetes.yml
 ```
 
 4. Connect to k8s cluster using config
-```
+```bash
 > export KUBECONFIG=kubeconf/k8s-master-01_admin.conf
 > kubectl get nodes
 ```
 
 5. Copy the granted token from generated dashboard_token.log
-```
+```bash
 cat dashboard_token.log | grep '^token'
 ```
 
 6. Run proxy for the Dashboard
-```
+```bash
 > kubectl proxy
 ```
 
@@ -50,12 +52,12 @@ cat dashboard_token.log | grep '^token'
 
 ### Install Dashboard Only
 
-```
+```bash
 > ansible-playbook -i inventory dashboard.yml
 ```
 
 ### Regenerate dashboard token
 
-```
+```bash
 > ansible-playbook -i inventory dashboard_token.yml
 ```
