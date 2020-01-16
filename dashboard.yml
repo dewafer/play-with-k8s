@@ -1,8 +1,9 @@
 ---
+
 - hosts: k8s_masters
   become: true
   become_user: root
   gather_facts: false
 
   tasks:
-    include_tasks: tasks/install_dashboard.yml
+    - include_tasks: tasks/install_dashboard.yml

@@ -1,9 +1,10 @@
 ---
-  - hosts: k8s_masters
-    become: true
-    become_user: root
-    gather_facts: false
-  
-    tasks:
-      include_tasks: tasks/grant_dashboard_token.yml
+
+- hosts: k8s_masters
+  become: true
+  become_user: root
+  gather_facts: false
+
+  tasks:
+    - include_tasks: tasks/grant_dashboard_token.yml
 
