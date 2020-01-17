@@ -6,9 +6,11 @@ Play with k8s clusters
 * [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 * [Virtualbox](https://www.virtualbox.org)
 * [Vagrant](https://www.vagrantup.com)
-* [Ansible](https://www.ansible.com)
+* [Ansible](https://www.ansible.com) (Optional)
 
 **Please note that current version of Vagrant (2.2.6) only supports Virtualbox version up to 6.0.x, please do not install Virtualbox 6.1.**
+
+If you install Ansible on your host machine is not an option, please check *Windows User* section.
 
 ## Usage
 
@@ -59,5 +61,31 @@ cat dashboard_token.log | grep '^token'
 ### Regenerate dashboard token
 
 ```bash
+> ansible-playbook -i inventory dashboard_token.yml
+```
+
+
+## Windows User
+
+Because Ansible does not support Windows host, we can use one of the nodes of the k8s clusters as the Ansible host.
+I've configured Vagrant to provision the kubernetes using the master node as the Ansible host.
+So please use the following orders to startup the clusters.
+
+1. Start Vms using Vagrant
+```cmd
+$ vagrant up
+```
+
+2. Provision kuberneters using Vagrant provision.
+```cmd
+$ vagrant provision --provision-with kubernetes
+```
+
+3. Use your k8s clusters.
+
+4. You can also run Ansible playbook after ssh into the master node, the project folder will be automatically mounted to `/vagrant`, and Ansible should already be installed.
+```cmd
+$ vagrant ssh k8s-master-01
+> cd /vagrant
 > ansible-playbook -i inventory dashboard_token.yml
 ```

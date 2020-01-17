@@ -26,10 +26,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.memory = server["ram"]
         vb.cpus = server["cpus"]
       end
+      if server["ansible_host"]
+        srv.vm.provision "kubernetes", type: :ansible_local, run: :never do |ansible|
+          ansible.playbook = "kubernetes.yml"
+          ansible.inventory_path = "inventory"
+          ansible.limit = "all"
+          # ansible.verbose = true
+          ansible.galaxy_role_file = "requirements.yml"
+          ansible.galaxy_roles_path = "/home/vagrant/.ansible/roles"
+        end
+        srv.vm.provision "file", source: "files/pks/id_rsa", destination: "/home/vagrant/.ssh/"
+      end
     end
   end
   config.vm.provision "shell" do |s|
-    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    ssh_pub_key = File.readlines("files/pks/id_rsa.pub").first.strip
     s.inline = <<-SHELL
       echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
