@@ -8,12 +8,14 @@ sudo apt install python-pip -y
 
 #pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 
-mkdir -p ~/.pip/
+sudo touch /etc/pip.conf
 
-cat <<EOF >> ~/.pip/pip.conf
+sudo bash -c 'cat <<EOF > /etc/pip.conf
 [global]
 index-url = https://mirrors.aliyun.com/pypi/simple/
 
 [install]
 trusted-host=mirrors.aliyun.com
-EOF
+EOF'
+
+echo "DONE."

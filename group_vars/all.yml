@@ -1,2 +1,18 @@
 ---
+docker_package: docker-ce=5:18.09.9~3-0~ubuntu-bionic
+docker_install_compose: false
+
+kubernetes_enable_web_ui: false
 kubernetes_web_ui_manifest_file: https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+
+kubernetes_allow_pods_on_master: true
+
+kubernetes_kubelet_extra_args: "--cgroup-driver=cgroupfs --node-ip={{ ansible_host }}"
+
+kubernetes_pod_network:
+# Flannel CNI.
+#  cni: 'flannel'
+#  cidr: '172.18.0.0/16'
+# Calico CNI.
+  cni: 'calico'
+  cidr: '10.244.0.0/16'

@@ -36,6 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ansible.galaxy_roles_path = "/home/vagrant/.ansible/roles"
         end
         srv.vm.provision "file", source: "files/pks/id_rsa", destination: "/home/vagrant/.ssh/"
+        srv.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/id_rsa"
       end
     end
   end
