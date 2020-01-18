@@ -47,4 +47,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
     SHELL
   end
+  config.vm.provision "aliyun_mirror", type: :shell, path: "files/apply_aliyun_mirrors.sh", run: :never
 end
