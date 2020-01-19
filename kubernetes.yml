@@ -3,6 +3,16 @@
 - hosts: all
   become: true
   become_user: root
+  
+  vars_files:
+    - vars/default.yml
+
+  pre_tasks:
+    - name: Include extra variables
+      include_vars:
+        file: "{{ ansible_env.EXTRA_VAR_FILE }}"
+      when: 
+        - ansible_env['EXTRA_VAR_FILE'] is defined
 
   roles:
     - geerlingguy.docker
@@ -26,4 +36,3 @@
     - include_tasks: tasks/grant_dashboard_token.yml
       when:
         - kubernetes_role == 'master'
-

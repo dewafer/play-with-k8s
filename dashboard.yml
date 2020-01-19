@@ -5,5 +5,8 @@
   become_user: root
   gather_facts: false
 
+  var_files:
+    - vars/default.yml
+
   tasks:
     - include_tasks: tasks/install_dashboard.yml
